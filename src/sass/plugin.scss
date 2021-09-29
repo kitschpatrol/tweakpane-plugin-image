@@ -9,9 +9,11 @@
 	@extend %input;
 
 	cursor: pointer;
-	display: grid;
-	height: calc(var(--bld-us) * 3);
-	overflow: hidden;
+	display: inline-flex;
+	height: auto !important;
+	max-height: calc(var(--bld-us) * 3);
+	//overflow: hidden;
+	border-radius: 4px;
 	position: relative;
 
 	&.#{$prefix}-v-disabled {
@@ -19,16 +21,17 @@
 	}
 
 	&_input {
-		width: 100%;
-		height: 100%;
-		opacity: 0;
+		width: 0;
+		height: 0;
+		pointer-events: none;
+		visibility: hidden;
 	}
 
 	&_image {
 		width: 100%;
-		height: 100%;
-		position: absolute;
-		pointer-events: none;
+		height: max-content;
+		max-height: calc(var(--bld-us) * 3);
+		//max-height: 100%;
 		border: 0;
 	}
 
@@ -39,14 +42,14 @@
 	&_image_cover {
 		object-fit: cover;
 	}
-	
+
 	&_area_root {
 		transition: opacity 0.16s ease-in-out;
 	}
 
 	&_area_dragging {
 		border: 2px dashed var(--tp-plugin-image-dragging-color);
-    border-radius: 6px;
+    border-radius: 4px;
 		opacity: 0.6;
 	}
 }

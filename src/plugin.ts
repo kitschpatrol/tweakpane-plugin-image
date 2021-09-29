@@ -35,6 +35,7 @@ export const TweakpaneImagePlugin: InputBindingPlugin<
 		const result = parseParams<PluginInputParams>(params, {
 			view: p.required.constant('input-image'),
 			acceptUrl: p.optional.boolean,
+			clickCallback: p.optional.function,
 			imageFit: p.optional.custom((v) =>
 				v === 'contain' || v === 'cover' ? v : undefined,
 			),
@@ -72,6 +73,7 @@ export const TweakpaneImagePlugin: InputBindingPlugin<
 		return new PluginController(args.document, {
 			value: args.value,
 			imageFit: args.params.imageFit ?? 'cover',
+			clickCallback: args.params.clickCallback as any,
 			viewProps: args.viewProps,
 			extensions: args.params.extensions ?? DEFAULT_EXTENSIONS,
 		});

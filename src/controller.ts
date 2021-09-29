@@ -9,22 +9,24 @@ interface Config {
 	imageFit: 'contain' | 'cover';
 	extensions: string[];
 	viewProps: ViewProps;
+	clickCallback?: (event: MouseEvent, input: HTMLInputElement) => void;
 }
+
+let placeholderImage: HTMLImageElement | null = null;
 
 export class PluginController implements Controller<PluginView> {
 	public readonly value: Value<ImageResolvable>;
 	public readonly view: PluginView;
 	public readonly viewProps: ViewProps;
-	private placeholderImage: HTMLImageElement | null = null;
 
 	constructor(doc: Document, config: Config) {
 		this.value = config.value;
 		this.viewProps = config.viewProps;
-
 		this.view = new PluginView(doc, {
 			viewProps: this.viewProps,
 			extensions: config.extensions,
 			imageFit: config.imageFit,
+			clickCallback: config.clickCallback,
 		});
 
 		this.onFile = this.onFile.bind(this);
@@ -99,17 +101,17 @@ export class PluginController implements Controller<PluginView> {
 				this.updateImage(clone.src);
 			});
 		} else if (typeof image === 'string') {
-			let finalUrl = '';
+			let finalUrl: any = '';
 			try {
 				if (image === 'placeholder') throw new Error('placeholder');
 				new URL(image);
 				const loadedImage = await loadImage(image);
 				finalUrl = loadedImage.src;
 			} catch (_) {
-				finalUrl = (await this.handlePlaceholderImage()).src;
+				finalUrl = null;
 			} finally {
-				this.updateImage(finalUrl);
-				this.setValue(finalUrl);
+				await this.setValue(finalUrl);
+				this.updateImage((this.value.rawValue as HTMLImageElement).src);
 			}
 		}
 	}
@@ -133,9 +135,9 @@ export class PluginController implements Controller<PluginView> {
 	}
 
 	private async handlePlaceholderImage(): Promise<HTMLImageElement> {
-		if (!this.placeholderImage) {
-			this.placeholderImage = await createPlaceholderImage();
+		if (!placeholderImage) {
+			placeholderImage = await createPlaceholderImage();
 		}
-		return this.placeholderImage;
+		return placeholderImage;
 	}
 }

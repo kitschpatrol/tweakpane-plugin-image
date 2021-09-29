@@ -4,13 +4,14 @@ interface Config {
 	viewProps: ViewProps;
 	imageFit: 'contain' | 'cover';
 	extensions: string[];
+	clickCallback?: (event: MouseEvent, input: HTMLInputElement) => void;
 }
 
 const className = ClassName('img');
 
 export class PluginView implements View {
 	public readonly element: HTMLElement;
-	public readonly input: HTMLElement;
+	public readonly input: HTMLInputElement;
 	private image_: HTMLImageElement;
 
 	constructor(doc: Document, config: Config) {
@@ -22,15 +23,20 @@ export class PluginView implements View {
 		this.input.classList.add(className('input'));
 		this.input.setAttribute('type', 'file');
 		this.input.setAttribute('accept', config.extensions.join(','));
-		this.element.appendChild(this.input);
 
 		this.image_ = doc.createElement('img');
 		this.image_.classList.add(className('image'));
 		this.image_.classList.add(className(`image_${config.imageFit}`));
+		this.image_.onclick = (event) => {
+			config.clickCallback
+				? config.clickCallback(event, this.input)
+				: this.input.click();
+		};
 
 		this.element.classList.add(className('area_root'));
 
 		this.element.appendChild(this.image_);
+		this.element.appendChild(this.input);
 	}
 
 	changeImage(src: string) {

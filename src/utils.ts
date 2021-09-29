@@ -1,14 +1,15 @@
 export function createPlaceholderImage(): Promise<HTMLImageElement> {
 	const canvas = document.createElement('canvas');
-	canvas.width = 128;
-	canvas.height = 64;
+	canvas.width = 320;
+	canvas.height = 50;
 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const ctx = canvas.getContext('2d')!;
-	ctx.fillStyle = '#222';
+	ctx.fillStyle = '#00000004';
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
-	ctx.fillStyle = '#ddd';
-	ctx.font = 'monospaced';
+	ctx.fillStyle = '#eee';
+	ctx.font =
+		'1.25rem "Roboto Mono", "Source Code Pro", Menlo, Courier, monospace';
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
 	ctx.fillText('No image', canvas.width * 0.5, canvas.height * 0.5);
@@ -17,6 +18,7 @@ export function createPlaceholderImage(): Promise<HTMLImageElement> {
 		canvas.toBlob((blob) => {
 			const image = new Image();
 			image.src = URL.createObjectURL(blob);
+			(image as any).isPlaceholder = true;
 			image.onload = () => {
 				resolve(image);
 			};
