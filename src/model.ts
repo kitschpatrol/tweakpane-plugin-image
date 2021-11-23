@@ -1,1 +1,1 @@
-export type ImageResolvable = 'placeholder' | HTMLImageElement | string;
+export type ImageResolvable = 'placeholder' | HTMLImageElement | string | File;

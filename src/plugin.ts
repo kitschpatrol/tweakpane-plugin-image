@@ -53,11 +53,11 @@ export const TweakpaneImagePlugin: InputBindingPlugin<
 
 	binding: {
 		reader(_args) {
-			return (exValue: unknown): ImageResolvable => {
-				if (exValue instanceof HTMLImageElement) {
+			return (exValue: any): ImageResolvable => {
+				if (exValue.src !== undefined) {
 					return exValue.src === '' ? 'placeholder' : exValue.src;
 				} else {
-					return typeof exValue === 'string' ? exValue : 'placeholder';
+					return typeof exValue === 'string' ? exValue : exValue;
 				}
 			};
 		},

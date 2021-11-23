@@ -29,11 +29,12 @@ export function createPlaceholderImage(): Promise<HTMLImageElement> {
 export async function loadImage(src: string): Promise<HTMLImageElement> {
 	const image = new Image();
 	image.crossOrigin = 'anonymous';
-	return new Promise((resolve) => {
+	return new Promise((resolve, reject) => {
 		image.src = src;
 		image.onload = () => {
 			resolve(image);
 		};
+		image.onerror = reject;
 	});
 }
 

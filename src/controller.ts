@@ -1,7 +1,7 @@
 import {Controller, Value, ViewProps} from '@tweakpane/core';
 
 import {ImageResolvable} from './model';
-import {cloneImage, createPlaceholderImage, loadImage} from './utils';
+import {createPlaceholderImage, loadImage} from './utils';
 import {PluginView} from './view';
 
 interface Config {
@@ -56,9 +56,8 @@ export class PluginController implements Controller<PluginView> {
 		if (!files || !files.length) return;
 
 		const file = files[0];
-		const url = URL.createObjectURL(file);
-		this.setValue(url);
-		this.updateImage(url);
+		this.setValue(file);
+		// this.updateImage(url);
 	}
 
 	private async onDrop(event: DragEvent) {
@@ -68,16 +67,18 @@ export class PluginController implements Controller<PluginView> {
 			const file = dataTransfer?.files[0];
 			if (file) {
 				const url = URL.createObjectURL(file);
-				this.updateImage(url);
+				// this.updateImage(url);
 				this.setValue(url);
 			} else {
 				const url = dataTransfer?.getData('url');
 				if (!url) throw new Error('No url');
-				loadImage(url).then(async (image) => {
-					const clone = await cloneImage(image);
-					this.updateImage(clone.src);
-					this.setValue(clone);
-				});
+				this.setValue(url);
+				// loadImage(url).then(async (image) => {
+				// 	console.log('drop', image);
+				// 	const clone = await cloneImage(image);
+				// 	// this.updateImage(clone.src);
+				// 	this.setValue(clone);
+				// });
 			}
 		} catch (e) {
 			console.error('Could not parse the dropped image', e);
@@ -97,17 +98,14 @@ export class PluginController implements Controller<PluginView> {
 
 	private async handleImage(image: ImageResolvable) {
 		if (image instanceof HTMLImageElement) {
-			cloneImage(image).then((clone) => {
-				this.updateImage(clone.src);
-			});
+			this.updateImage(image.src);
 		} else if (typeof image === 'string') {
 			let finalUrl: any = '';
 			try {
 				if (image === 'placeholder') throw new Error('placeholder');
-				new URL(image);
 				const loadedImage = await loadImage(image);
 				finalUrl = loadedImage.src;
-			} catch (_) {
+			} catch (e) {
 				finalUrl = null;
 			} finally {
 				await this.setValue(finalUrl);
@@ -123,6 +121,14 @@ export class PluginController implements Controller<PluginView> {
 	private async setValue(src: ImageResolvable) {
 		if (src instanceof HTMLImageElement) {
 			this.value.setRawValue(src);
+		} else if (src instanceof File) {
+			const url = URL.createObjectURL(src);
+			(src as any).src = url;
+			const img = await loadImage(url).catch(() => {
+				// URL.revokeObjectURL(url);
+			});
+			// URL.revokeObjectURL(url); //todo: revoke sometime.
+			this.value.setRawValue(img || src);
 		} else if (src) {
 			this.value.setRawValue(await loadImage(src));
 		} else {
