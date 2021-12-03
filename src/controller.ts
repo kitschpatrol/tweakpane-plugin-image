@@ -109,7 +109,7 @@ export class PluginController implements Controller<PluginView> {
 				finalUrl = null;
 			} finally {
 				await this.setValue(finalUrl);
-				this.updateImage((this.value.rawValue as HTMLImageElement).src);
+				// this.updateImage((this.value.rawValue as HTMLImageElement).src);
 			}
 		}
 	}
