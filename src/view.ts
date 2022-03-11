@@ -27,6 +27,7 @@ export class PluginView implements View {
 		this.image_ = doc.createElement('img');
 		this.image_.classList.add(className('image'));
 		this.image_.classList.add(className(`image_${config.imageFit}`));
+		this.image_.crossOrigin = 'anonymous';
 		this.image_.onclick = (event) => {
 			config.clickCallback
 				? config.clickCallback(event, this.input)

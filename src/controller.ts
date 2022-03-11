@@ -66,9 +66,9 @@ export class PluginController implements Controller<PluginView> {
 			const {dataTransfer} = event;
 			const file = dataTransfer?.files[0];
 			if (file) {
-				const url = URL.createObjectURL(file);
+				// const url = URL.createObjectURL(file);
 				// this.updateImage(url);
-				this.setValue(url);
+				this.setValue(file);
 			} else {
 				const url = dataTransfer?.getData('url');
 				if (!url) throw new Error('No url');
@@ -99,18 +99,13 @@ export class PluginController implements Controller<PluginView> {
 	private async handleImage(image: ImageResolvable) {
 		if (image instanceof HTMLImageElement) {
 			this.updateImage(image.src);
-		} else if (typeof image === 'string') {
-			let finalUrl: any = '';
-			try {
-				if (image === 'placeholder') throw new Error('placeholder');
-				const loadedImage = await loadImage(image);
-				finalUrl = loadedImage.src;
-			} catch (e) {
-				finalUrl = null;
-			} finally {
-				await this.setValue(finalUrl);
-				// this.updateImage((this.value.rawValue as HTMLImageElement).src);
+		} else if (typeof image === 'string' || !image) {
+			if (image === 'placeholder' || !image) {
+				image = (await this.handlePlaceholderImage()).src;
 			}
+			this.updateImage(image);
+		} else {
+			await this.setValue(image);
 		}
 	}
 

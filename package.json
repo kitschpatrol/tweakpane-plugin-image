@@ -5,7 +5,12 @@
   "main": "dist/tweakpane-image-plugin.js",
   "author": "Florian Morel, Matheus Dias <methidezeeni@gmail.com>",
   "license": "MIT",
-  "keywords": ["tweakpane", "tweakpane-plugin", "plugin", "image-input"],
+  "keywords": [
+    "tweakpane",
+    "tweakpane-plugin",
+    "plugin",
+    "image-input"
+  ],
   "files": [
     "dist"
   ],
