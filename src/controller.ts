@@ -117,7 +117,7 @@ export class PluginController implements Controller<PluginView> {
 		if (src instanceof HTMLImageElement) {
 			this.value.setRawValue(src);
 		} else if (src instanceof File) {
-			const url = URL.createObjectURL(src + '#' + src.name);
+			const url = URL.createObjectURL(src) + '#' + src.name;
 			(src as any).src = url;
 			const img = await loadImage(url).catch(() => {
 				// URL.revokeObjectURL(url);
