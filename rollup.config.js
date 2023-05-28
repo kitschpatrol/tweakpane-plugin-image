@@ -80,7 +80,7 @@ export default async () => {
 	const production = process.env.BUILD === 'production';
 	const postfix = production ? '.min' : '';
 
-	const distName = getDistName(Package.name);
+	const distName = getDistName('index');
 	const css = await compileCss();
 	return {
 		input: 'src/index.ts',
@@ -91,7 +91,7 @@ export default async () => {
 			globals: {
 				tweakpane: 'Tweakpane',
 			},
-			name: getUmdName(Package.name),
+			name: getUmdName('index'),
 		},
 		plugins: getPlugins(css, production),
 

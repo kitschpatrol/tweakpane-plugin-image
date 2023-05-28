@@ -1,8 +1,10 @@
 {
   "name": "tweakpane-image-plugin",
-  "version": "1.1.4",
+  "version": "1.1.401",
   "description": "Image input plugin for Tweakpane",
-  "main": "dist/tweakpane-image-plugin.js",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "author": "Florian Morel, Matheus Dias <methidezeeni@gmail.com>",
   "license": "MIT",
   "keywords": [
@@ -12,7 +14,10 @@
     "image-input"
   ],
   "files": [
-    "dist"
+    "dist",
+    "src",
+    "LICENSE",
+    "README.md"
   ],
   "scripts": {
     "prepare": "run-s clean build",
