@@ -17,6 +17,10 @@ export function createPlaceholderImage(): Promise<HTMLImageElement> {
 	return new Promise((resolve) => {
 		canvas.toBlob((blob) => {
 			const image = new Image();
+			if (!blob) {
+				resolve(image);
+				return;
+			}
 			image.src = URL.createObjectURL(blob);
 			(image as any).isPlaceholder = true;
 			image.onload = () => {
@@ -52,6 +56,10 @@ export function cloneImage(
 	const image = new Image();
 	return new Promise((resolve) => {
 		canvas.toBlob((blob) => {
+			if (!blob) {
+				resolve(image);
+				return;
+			}
 			image.src = URL.createObjectURL(blob);
 			image.onload = () => {
 				resolve(image);
