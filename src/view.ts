@@ -12,7 +12,7 @@ const className = ClassName('img');
 export class PluginView implements View {
 	public readonly element: HTMLElement;
 	public readonly input: HTMLInputElement;
-	private image_: HTMLImageElement;
+	public readonly image_: HTMLImageElement;
 
 	constructor(doc: Document, config: Config) {
 		this.element = doc.createElement('div');
@@ -25,6 +25,7 @@ export class PluginView implements View {
 		this.input.setAttribute('accept', config.extensions.join(','));
 
 		this.image_ = doc.createElement('img');
+		this.image_.id = 'tpimg_' + Math.random().toString(36).slice(2); // need unique for drop
 		this.image_.classList.add(className('image'));
 		this.image_.classList.add(className(`image_${config.imageFit}`));
 		this.image_.crossOrigin = 'anonymous';

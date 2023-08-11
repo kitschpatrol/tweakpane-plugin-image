@@ -31,22 +31,25 @@ export class PluginController implements Controller<PluginView> {
 
 		this.onFile = this.onFile.bind(this);
 		this.onDrop = this.onDrop.bind(this);
+		this.onDragStart = this.onDragStart.bind(this);
 		this.onDragOver = this.onDragOver.bind(this);
 		this.onDragLeave = this.onDragLeave.bind(this);
 
 		this.view.input.addEventListener('change', this.onFile);
 		this.view.element.addEventListener('drop', this.onDrop);
+		this.view.element.addEventListener('dragstart', this.onDragStart);
 		this.view.element.addEventListener('dragover', this.onDragOver);
 		this.view.element.addEventListener('dragleave', this.onDragLeave);
 
 		this.viewProps.handleDispose(() => {
 			this.view.input.removeEventListener('change', this.onFile);
-			this.view.input.removeEventListener('drop', this.onDrop);
-			this.view.input.removeEventListener('dragover', this.onDragOver);
-			this.view.input.removeEventListener('dragleave', this.onDragLeave);
+			this.view.element.removeEventListener('drop', this.onDrop);
+			this.view.element.removeEventListener('dragstart', this.onDragStart);
+			this.view.element.removeEventListener('dragover', this.onDragOver);
+			this.view.element.removeEventListener('dragleave', this.onDragLeave);
 		});
 
-		this.value.emitter.on('change', this.handleValueChange.bind(this));
+		this.value.emitter.on('change', () => this.handleValueChange());
 
 		this.handleValueChange();
 	}
@@ -60,7 +63,7 @@ export class PluginController implements Controller<PluginView> {
 		// this.updateImage(url);
 	}
 
-	private async onDrop(event: DragEvent) {
+	private onDrop(event: DragEvent) {
 		event.preventDefault();
 		try {
 			const {dataTransfer} = event;
@@ -70,9 +73,15 @@ export class PluginController implements Controller<PluginView> {
 				// this.updateImage(url);
 				this.setValue(file);
 			} else {
-				const url = dataTransfer?.getData('url');
-				if (!url) throw new Error('No url');
-				this.setValue(url);
+				const imgId = dataTransfer?.getData('img-id');
+				if (imgId) {
+					const img = document.getElementById(imgId) as HTMLImageElement;
+					this.setValue(img);
+				} else {
+					const url = dataTransfer?.getData('url');
+					if (!url) throw new Error('No url');
+					this.setValue(url);
+				}
 				// loadImage(url).then(async (image) => {
 				// 	console.log('drop', image);
 				// 	const clone = await cloneImage(image);
@@ -87,6 +96,11 @@ export class PluginController implements Controller<PluginView> {
 		}
 	}
 
+	private onDragStart(event: DragEvent) {
+		event.dataTransfer?.setData('img-id', this.view.image_.id);
+		event.dataTransfer?.setDragImage(this.view.image_, 0, 0);
+	}
+
 	private onDragOver(event: Event) {
 		event.preventDefault();
 		this.view.changeDraggingState(true);
@@ -96,16 +110,16 @@ export class PluginController implements Controller<PluginView> {
 		this.view.changeDraggingState(false);
 	}
 
-	private async handleImage(image: ImageResolvable) {
+	private handleImage(image: ImageResolvable) {
 		if (image instanceof HTMLImageElement) {
 			this.updateImage(image.src);
 		} else if (typeof image === 'string' || !image) {
 			if (image === 'placeholder' || !image) {
-				image = (await this.handlePlaceholderImage()).src;
+				image = this.handlePlaceholderImage().src;
 			}
 			this.updateImage(image);
 		} else {
-			await this.setValue(image);
+			this.setValue(image);
 		}
 	}
 
@@ -113,21 +127,22 @@ export class PluginController implements Controller<PluginView> {
 		this.view.changeImage(src);
 	}
 
-	private async setValue(src: ImageResolvable) {
+	private setValue(src: ImageResolvable) {
 		if (src instanceof HTMLImageElement) {
 			this.value.setRawValue(src);
 		} else if (src instanceof File) {
 			const url = URL.createObjectURL(src) + '#' + src.name;
 			(src as any).src = url;
-			const img = await loadImage(url).catch(() => {
-				// URL.revokeObjectURL(url);
-			});
+			const img = loadImage(url);
+			// 	.catch(() => {
+			// 	// URL.revokeObjectURL(url);
+			// });
 			// URL.revokeObjectURL(url); //todo: revoke sometime.
 			this.value.setRawValue(img || src);
 		} else if (src) {
-			this.value.setRawValue(await loadImage(src));
+			this.value.setRawValue(loadImage(src));
 		} else {
-			this.value.setRawValue(await this.handlePlaceholderImage());
+			this.value.setRawValue(this.handlePlaceholderImage());
 		}
 	}
 
@@ -135,9 +150,9 @@ export class PluginController implements Controller<PluginView> {
 		this.handleImage(this.value.rawValue);
 	}
 
-	private async handlePlaceholderImage(): Promise<HTMLImageElement> {
+	private handlePlaceholderImage(): HTMLImageElement {
 		if (!placeholderImage) {
-			placeholderImage = await createPlaceholderImage();
+			placeholderImage = createPlaceholderImage();
 		}
 		return placeholderImage;
 	}

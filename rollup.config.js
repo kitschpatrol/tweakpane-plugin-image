@@ -87,10 +87,11 @@ export default async () => {
 		external: ['tweakpane'],
 		output: {
 			file: `dist/${distName}${postfix}.js`,
-			format: 'umd',
-			globals: {
-				tweakpane: 'Tweakpane',
-			},
+			format: 'es',
+			sourcemap: true,
+			// globals: {
+			// 	tweakpane: 'Tweakpane',
+			// },
 			name: getUmdName('index'),
 		},
 		plugins: getPlugins(css, production),

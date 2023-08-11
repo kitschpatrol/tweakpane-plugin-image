@@ -1,4 +1,4 @@
-export function createPlaceholderImage(): Promise<HTMLImageElement> {
+export function createPlaceholderImage(): HTMLImageElement {
 	const canvas = document.createElement('canvas');
 	canvas.width = 320;
 	canvas.height = 50;
@@ -13,33 +13,27 @@ export function createPlaceholderImage(): Promise<HTMLImageElement> {
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
 	ctx.fillText('No image', canvas.width * 0.5, canvas.height * 0.5);
-
-	return new Promise((resolve) => {
-		canvas.toBlob((blob) => {
-			const image = new Image();
-			if (!blob) {
-				resolve(image);
-				return;
-			}
-			image.src = URL.createObjectURL(blob);
-			(image as any).isPlaceholder = true;
-			image.onload = () => {
-				resolve(image);
-			};
-		});
-	});
+	const image = new Image();
+	// if (!blob) {
+	// 	resolve(image);
+	// 	return;
+	// }
+	image.src = canvas.toDataURL('image/png', 0.8);
+	(image as any).isPlaceholder = true;
+	// image.onload = () => {
+	// 	resolve(image);
+	// };
+	return image;
 }
 
-export async function loadImage(src: string): Promise<HTMLImageElement> {
+export function loadImage(src: string): HTMLImageElement {
 	const image = new Image();
 	image.crossOrigin = 'anonymous';
-	return new Promise((resolve, reject) => {
-		image.src = src;
-		image.onload = () => {
-			resolve(image);
-		};
-		image.onerror = reject;
-	});
+	image.src = src;
+	// image.onload = () => {
+	// };
+	// image.onerror = reject;
+	return image;
 }
 
 export function cloneImage(
