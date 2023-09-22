@@ -1,8 +1,8 @@
 import {Controller, Value, ViewProps} from '@tweakpane/core';
 
-import {ImageResolvable} from './model';
-import {createPlaceholderImage, loadImage} from './utils';
-import {PluginView} from './view';
+import {ImageResolvable} from './model.js';
+import {createPlaceholderImage, loadImage} from './utils.js';
+import {PluginView} from './view.js';
 
 interface Config {
 	value: Value<ImageResolvable>;

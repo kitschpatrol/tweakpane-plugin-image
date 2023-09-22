@@ -1,28 +1,21 @@
 export function createPlaceholderImage(): HTMLImageElement {
-	const canvas = document.createElement('canvas');
-	canvas.width = 320;
-	canvas.height = 50;
+	const svg = `
+	<svg width="320" height="50" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    text {
+      font-family: "Menlo", monospace;
+      font-size: 12px;
+			fill: gray;
+    }
+  </style>
+  <text x="50%" y="55%" text-anchor="middle">
+    No Image
+  </text>
+</svg>`;
 
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	const ctx = canvas.getContext('2d')!;
-	ctx.fillStyle = '#00000004';
-	ctx.fillRect(0, 0, canvas.width, canvas.height);
-	ctx.fillStyle = '#eee';
-	ctx.font =
-		'1.25rem "Roboto Mono", "Source Code Pro", Menlo, Courier, monospace';
-	ctx.textAlign = 'center';
-	ctx.textBaseline = 'middle';
-	ctx.fillText('No image', canvas.width * 0.5, canvas.height * 0.5);
+	const blob = new Blob([svg], {type: 'image/svg+xml'});
 	const image = new Image();
-	// if (!blob) {
-	// 	resolve(image);
-	// 	return;
-	// }
-	image.src = canvas.toDataURL('image/png', 0.8);
-	(image as any).isPlaceholder = true;
-	// image.onload = () => {
-	// 	resolve(image);
-	// };
+	image.src = URL.createObjectURL(blob as Blob);
 	return image;
 }
 
