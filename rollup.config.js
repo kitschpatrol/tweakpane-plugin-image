@@ -3,15 +3,15 @@ import {nodeResolve} from '@rollup/plugin-node-resolve';
 import Replace from '@rollup/plugin-replace';
 import Typescript from '@rollup/plugin-typescript';
 import Autoprefixer from 'autoprefixer';
-import NodeSass from 'node-sass';
 import Postcss from 'postcss';
 import Cleanup from 'rollup-plugin-cleanup';
 import {terser as Terser} from 'rollup-plugin-terser';
+import Sass from 'sass';
 
 import Package from './package.json';
 
 async function compileCss() {
-	const css = NodeSass.renderSync({
+	const css = Sass.renderSync({
 		file: 'src/sass/plugin.scss',
 		outputStyle: 'compressed',
 	}).css.toString();
@@ -80,18 +80,19 @@ export default async () => {
 	const production = process.env.BUILD === 'production';
 	const postfix = production ? '.min' : '';
 
-	const distName = getDistName(Package.name);
+	const distName = getDistName('index');
 	const css = await compileCss();
 	return {
 		input: 'src/index.ts',
 		external: ['tweakpane'],
 		output: {
 			file: `dist/${distName}${postfix}.js`,
-			format: 'umd',
-			globals: {
-				tweakpane: 'Tweakpane',
-			},
-			name: getUmdName(Package.name),
+			format: 'es',
+			sourcemap: true,
+			// globals: {
+			// 	tweakpane: 'Tweakpane',
+			// },
+			name: getUmdName('index'),
 		},
 		plugins: getPlugins(css, production),
 

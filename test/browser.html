@@ -12,19 +12,90 @@
         const img = new Image();
         img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
 		const params = {
-			image: img
+			base64: img,
+			placeholder: 'placeholder',
+			url: 'https://images.unsplash.com/photo-1631875182291-17e8310183ed?q=80&w=500'
 		};
+
+		document.addEventListener('load', () => {
+			changeAllImages()
+		})
+
 		const pane = new Tweakpane.Pane();
 
 		pane.registerPlugin(TweakpaneImagePlugin);
 
-		pane.addInput(params, 'image', {
-			extensions: '.jpg, .png',
+		pane.addInput(params, 'base64', {
+			view: 'input-image'
 		}).on('change', (ev) => {
-			console.log('le change', ev.value);
+			console.log('base64 image value changed to ', ev.value);
+			changeAllImages()
 		});
+
+		pane.addInput(params, 'placeholder', {
+			view: 'input-image'
+		}).on('change', (ev) => {
+			console.log('Placeholder image value changed to ', ev.value);
+			changeAllImages()
+		});
+
+		pane.addInput(params, 'url', {
+			view: 'input-image',
+			imageFit: 'contain',
+			label: 'Url (with contain fit)'
+		}).on('change', (ev) => {
+			console.log('URL image value changed to ', ev.value);
+			changeAllImages()
+		});
+
+		function changeImage (id, img) {
+			if (img && img.src) {
+				document.getElementById(id).src = img.src
+			}
+		}
+
+		function changeAllImages() {
+			changeImage('base64', params.base64)
+			changeImage('placeholder', params.placeholder)
+			changeImage('url', params.url)
+		}
 
 		window.pane = pane;
 	</script>
+
+	<style>
+		img {
+			max-width: 100%;
+		}
+		* {
+			font-family: monospace;	
+		}
+	</style>
+
+	<h1><a href="https://github.com/metehus/tweakpane-image-plugin">
+		tweakpane-image-plugin
+	</a></h1>
+	Image input plugin for <a href="https://cocopon.github.io/tweakpane/">TweakPane</a>.
+	Created by <a href="https://github.com/metehus">@metehus</a> based on
+	<a href="https://github.com/ayamflow/tweakpane-image-plugin">a fork</a>.
+
+
+	<h2>
+		Try to click on a image to change it or drag and drop from a file or a URL.
+	</h2>
+
+
+	<h3>Images:</h3>
+
+	<h5><b>base64</b></h5>
+	<img id="base64"/>
+
+	
+	<h5><b>placeholder</b></h5>
+	<img id="placeholder"/>
+
+	
+	<h5><b>url</b></h5>
+	<img id="url"/>
 </body>
 </html>

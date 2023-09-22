@@ -7,13 +7,19 @@ import {
 } from '@tweakpane/core';
 
 import {PluginController} from './controller';
+import {ImageResolvable} from './model';
 
-interface PluginInputParams extends BaseInputParams {
-	extensions: string;
+export interface PluginInputParams extends BaseInputParams {
+	view: 'input-image';
+	imageFit?: 'contain' | 'cover';
+	extensions?: string[];
 }
+
+const DEFAULT_EXTENSIONS = ['.jpg', '.png', '.gif'];
+
 export const TweakpaneImagePlugin: InputBindingPlugin<
-	HTMLImageElement,
-	HTMLImageElement,
+	ImageResolvable,
+	ImageResolvable,
 	PluginInputParams
 > = {
 	id: 'input-image',
@@ -21,13 +27,19 @@ export const TweakpaneImagePlugin: InputBindingPlugin<
 	css: '__css__',
 
 	accept(exValue: unknown, params: Record<string, unknown>) {
-		if (!(exValue instanceof HTMLImageElement)) {
+		if (!(exValue instanceof HTMLImageElement || typeof exValue === 'string')) {
 			return null;
 		}
 
 		const p = ParamsParsers;
 		const result = parseParams<PluginInputParams>(params, {
-			extensions: p.optional.string,
+			view: p.required.constant('input-image'),
+			acceptUrl: p.optional.boolean,
+			clickCallback: p.optional.function,
+			imageFit: p.optional.custom((v) =>
+				v === 'contain' || v === 'cover' ? v : undefined,
+			),
+			extensions: p.optional.array(p.required.string),
 		});
 		if (!result) {
 			return null;
@@ -41,10 +53,12 @@ export const TweakpaneImagePlugin: InputBindingPlugin<
 
 	binding: {
 		reader(_args) {
-			return (exValue: unknown): HTMLImageElement => {
-				return exValue instanceof HTMLImageElement
-					? exValue
-					: document.createElement('img');
+			return (exValue: any): ImageResolvable => {
+				if (exValue.src !== undefined) {
+					return exValue.src === '' ? 'placeholder' : exValue.src;
+				} else {
+					return typeof exValue === 'string' ? exValue : exValue;
+				}
 			};
 		},
 
@@ -58,8 +72,10 @@ export const TweakpaneImagePlugin: InputBindingPlugin<
 	controller(args) {
 		return new PluginController(args.document, {
 			value: args.value,
-			extensions: (args.params.extensions ?? '').replace(/\s/g, '').split(','),
+			imageFit: args.params.imageFit ?? 'cover',
+			clickCallback: args.params.clickCallback as any,
 			viewProps: args.viewProps,
+			extensions: args.params.extensions ?? DEFAULT_EXTENSIONS,
 		});
 	},
 };

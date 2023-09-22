@@ -1,51 +1,56 @@
-import {ClassName, Value, View, ViewProps} from '@tweakpane/core';
+import {ClassName, View, ViewProps} from '@tweakpane/core';
 
 interface Config {
-	value: Value<HTMLImageElement>;
 	viewProps: ViewProps;
+	imageFit: 'contain' | 'cover';
 	extensions: string[];
+	clickCallback?: (event: MouseEvent, input: HTMLInputElement) => void;
 }
-
-const DEFAULT_EXTENSIONS = ['.jpg', '.png', '.gif'];
 
 const className = ClassName('img');
 
 export class PluginView implements View {
 	public readonly element: HTMLElement;
-	public readonly input: HTMLElement;
-	private value_: Value<HTMLImageElement>;
-	private image_: HTMLImageElement;
+	public readonly input: HTMLInputElement;
+	public readonly image_: HTMLImageElement;
 
 	constructor(doc: Document, config: Config) {
 		this.element = doc.createElement('div');
 		this.element.classList.add(className());
 		config.viewProps.bindClassModifiers(this.element);
 
-		this.value_ = config.value;
-		this.value_.emitter.on('change', this.onValueChange_.bind(this));
-
 		this.input = doc.createElement('input');
 		this.input.classList.add(className('input'));
 		this.input.setAttribute('type', 'file');
-		this.input.setAttribute(
-			'accept',
-			(config.extensions ?? DEFAULT_EXTENSIONS).join(','),
-		);
-		this.element.appendChild(this.input);
+		this.input.setAttribute('accept', config.extensions.join(','));
 
 		this.image_ = doc.createElement('img');
+		this.image_.id = 'tpimg_' + Math.random().toString(36).slice(2); // need unique for drop
 		this.image_.classList.add(className('image'));
+		this.image_.classList.add(className(`image_${config.imageFit}`));
+		this.image_.crossOrigin = 'anonymous';
+		this.image_.onclick = (event) => {
+			config.clickCallback
+				? config.clickCallback(event, this.input)
+				: this.input.click();
+		};
+
+		this.element.classList.add(className('area_root'));
+
 		this.element.appendChild(this.image_);
-
-		this.refresh_();
+		this.element.appendChild(this.input);
 	}
 
-	private refresh_(): void {
-		const rawValue = this.value_.rawValue;
-		this.image_.setAttribute('src', rawValue.src);
+	changeImage(src: string) {
+		this.image_.src = src;
 	}
 
-	private onValueChange_() {
-		this.refresh_();
+	changeDraggingState(state: boolean) {
+		const el = this.element;
+		if (state) {
+			el?.classList.add(className('area_dragging'));
+		} else {
+			el?.classList.remove(className('area_dragging'));
+		}
 	}
 }
