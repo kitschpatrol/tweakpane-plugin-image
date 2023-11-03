@@ -1,66 +1,11 @@
-# Tweakpane image plugin
+# `@kitschpatrol/tweakpane-image-plugin`
 
-Image input plugin for [Tweakpane][tweakpane].
-![image](https://user-images.githubusercontent.com/22124518/133916776-a5340b89-025d-44a2-bdc3-87bd11b468db.png)
+**This is a fork of [tweakpane-image-plugin](https://github.com/metehus/tweakpane-image-plugin) with Tweakpane 4.0 compatibility. It is published to NPM for dependent projects.**
 
-Check out the [demo][demo].
+The ancestry of this fork is a bit complicated. It's based on [Florian Morel's original work](https://github.com/ayamflow/tweakpane-image-plugin), but merges changes from [Matheus Dias's fork](https://github.com/metehus/tweakpane-image-plugin) and [Palash Bansal's fork](https://github.com/repalash/tweakpane-image-plugin). See the [GitHub network graph](https://github.com/kitschpatrol/tweakpane-image-plugin/network) for some clarity.
 
-## Features
+I believe Matheus's fork is what's currently published as `tweakpane-image-plugin` on NPM, so that's where a PR incorporating Tweakpane 4 compatibility is curently open.
 
-- Accepts images and URLs
-- Image input
-- Drag and drop
-- Placeholders
+Ideally, this fork will be made unecessary when the [PR on the upstream project](https://github.com/metehus/tweakpane-image-plugin/pull/1) is merged.
 
-## Installation
-
-You can install [this package][npm-link] via NPM:
-
-```sh
-npm i tweakpane-image-plugin
-```
-
-## Usage
-
-You can use this plugin using these parameters:
-
-```ts
-pane.addBinding(params, 'url', {
-  view: 'input-image';
-  imageFit?: 'contain' | 'cover';
-  extensions?: string[];
-})
-```
-
-## Example
-
-```js
-import {Pane} from 'tweakpane';
-import * as TweakpaneImagePlugin from 'tweakpane-image-plugin';
-
-const pane = new Pane();
-pane.registerPlugin(TweakpaneImagePlugin);
-
-const params = {
-	image: new Image(),
-	placeholder: 'placeholder',
-	url: 'https://images.unsplash.com/photo-1631875182291-17e8310183ed?q=80&w=500',
-};
-
-pane.addBinding(params, 'image', {
-	extensions: '.jpg, .gif',
-});
-
-pane.addBinding(params, 'placeholder', {
-	view: 'input-image',
-});
-
-pane.addBinding(params, 'url', {
-	view: 'input-image',
-	imageFit: 'contain',
-});
-```
-
-[tweakpane]: https://github.com/cocopon/tweakpane/
-[npm-link]: https://www.npmjs.com/package/tweakpane-image-plugin
-[demo]: https://tweakpane-image-plugin.netlify.app/
+Please refer to the [upstream project](https://github.com/metehus/tweakpane-image-plugin) for documentation and other details.
