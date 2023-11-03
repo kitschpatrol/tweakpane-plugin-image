@@ -1,3 +1,9 @@
-import {TweakpaneImagePlugin} from './plugin';
+import type {TpPlugin} from 'tweakpane';
 
-export const plugin = TweakpaneImagePlugin;
+import {TweakpaneImagePlugin} from './plugin.js';
+
+export const id = 'input-image';
+
+export const css = '__css__';
+
+export const plugins: TpPlugin[] = [TweakpaneImagePlugin];

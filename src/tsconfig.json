@@ -1,12 +1,8 @@
 {
-	"compilerOptions": {
-		"lib": ["DOM", "ES2015"],
-		"moduleResolution": "Node",
-		"strict": true,
-		"target": "ES6",
-		"declaration": true,
-		"sourceMap": true,
-		"declarationMap": true,
-		"outDir": ""
-	}
+  "compilerOptions": {
+    "lib": ["DOM", "ES2015"],
+    "moduleResolution": "Node16",
+    "strict": true,
+    "target": "ES6"
+  }
 }
