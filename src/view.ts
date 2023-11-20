@@ -4,14 +4,15 @@ interface Config {
 	viewProps: ViewProps;
 	imageFit: 'contain' | 'cover';
 	extensions: string[];
+	clickCallback?: (event: MouseEvent, input: HTMLInputElement) => void;
 }
 
 const className = ClassName('img');
 
 export class PluginView implements View {
 	public readonly element: HTMLElement;
-	public readonly input: HTMLElement;
-	private image_: HTMLImageElement;
+	public readonly input: HTMLInputElement;
+	public readonly image_: HTMLImageElement;
 
 	constructor(doc: Document, config: Config) {
 		this.element = doc.createElement('div');
@@ -22,15 +23,22 @@ export class PluginView implements View {
 		this.input.classList.add(className('input'));
 		this.input.setAttribute('type', 'file');
 		this.input.setAttribute('accept', config.extensions.join(','));
-		this.element.appendChild(this.input);
 
 		this.image_ = doc.createElement('img');
+		this.image_.id = 'tpimg_' + Math.random().toString(36).slice(2); // need unique for drop
 		this.image_.classList.add(className('image'));
 		this.image_.classList.add(className(`image_${config.imageFit}`));
+		this.image_.crossOrigin = 'anonymous';
+		this.image_.onclick = (event) => {
+			config.clickCallback
+				? config.clickCallback(event, this.input)
+				: this.input.click();
+		};
 
 		this.element.classList.add(className('area_root'));
 
 		this.element.appendChild(this.image_);
+		this.element.appendChild(this.input);
 	}
 
 	changeImage(src: string) {

@@ -1,38 +1,32 @@
-export function createPlaceholderImage(): Promise<HTMLImageElement> {
-	const canvas = document.createElement('canvas');
-	canvas.width = 128;
-	canvas.height = 64;
+export function createPlaceholderImage(): HTMLImageElement {
+	const svg = `
+	<svg width="320" height="50" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    text {
+      font-family: "Menlo", monospace;
+      font-size: 12px;
+			fill: gray;
+    }
+  </style>
+  <text x="50%" y="55%" text-anchor="middle">
+    No Image
+  </text>
+</svg>`;
 
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	const ctx = canvas.getContext('2d')!;
-	ctx.fillStyle = '#222';
-	ctx.fillRect(0, 0, canvas.width, canvas.height);
-	ctx.fillStyle = '#ddd';
-	ctx.font = 'monospaced';
-	ctx.textAlign = 'center';
-	ctx.textBaseline = 'middle';
-	ctx.fillText('No image', canvas.width * 0.5, canvas.height * 0.5);
-
-	return new Promise((resolve) => {
-		canvas.toBlob((blob) => {
-			const image = new Image();
-			image.src = URL.createObjectURL(blob);
-			image.onload = () => {
-				resolve(image);
-			};
-		});
-	});
+	const blob = new Blob([svg], {type: 'image/svg+xml'});
+	const image = new Image();
+	image.src = URL.createObjectURL(blob as Blob);
+	return image;
 }
 
-export async function loadImage(src: string): Promise<HTMLImageElement> {
+export function loadImage(src: string): HTMLImageElement {
 	const image = new Image();
 	image.crossOrigin = 'anonymous';
-	return new Promise((resolve) => {
-		image.src = src;
-		image.onload = () => {
-			resolve(image);
-		};
-	});
+	image.src = src;
+	// image.onload = () => {
+	// };
+	// image.onerror = reject;
+	return image;
 }
 
 export function cloneImage(
@@ -49,6 +43,10 @@ export function cloneImage(
 	const image = new Image();
 	return new Promise((resolve) => {
 		canvas.toBlob((blob) => {
+			if (!blob) {
+				resolve(image);
+				return;
+			}
 			image.src = URL.createObjectURL(blob);
 			image.onload = () => {
 				resolve(image);
