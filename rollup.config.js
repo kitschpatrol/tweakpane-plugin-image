@@ -1,6 +1,5 @@
 /* eslint-env node */
 
-import Alias from '@rollup/plugin-alias';
 import {nodeResolve} from '@rollup/plugin-node-resolve';
 import Replace from '@rollup/plugin-replace';
 import Typescript from '@rollup/plugin-typescript';
@@ -24,14 +23,6 @@ async function compileCss() {
 
 function getPlugins(css, shouldMinify) {
 	const plugins = [
-		Alias({
-			entries: [
-				{
-					find: '@tweakpane/core',
-					replacement: './node_modules/@tweakpane/core/dist/index.js',
-				},
-			],
-		}),
 		Typescript({
 			tsconfig: 'src/tsconfig.json',
 		}),
@@ -57,17 +48,14 @@ export default async () => {
 	const production = process.env.BUILD === 'production';
 	const postfix = production ? '.min' : '';
 
-	const distName = 'tweakpane-image-plugin';
+	const distName = 'tweakpane-plugin-image';
 	const css = await compileCss();
 	return {
 		input: 'src/index.ts',
-		external: ['tweakpane'],
+		external: ['tweakpane', '@tweakpane/core'],
 		output: {
 			file: `dist/${distName}${postfix}.js`,
 			format: 'esm',
-			globals: {
-				tweakpane: 'Tweakpane',
-			},
 		},
 		plugins: getPlugins(css, production),
 

@@ -28,6 +28,4 @@ The ancestry of this fork is a bit complicated. It's based on [Florian Morel's o
 
 I believe Matheus's fork is what's currently published as `tweakpane-image-plugin` on NPM.
 
-Note the package name change from `tweakpane-image-plugin` to `@kitschpatrol/tweakpane-plugin-image` in the sanity-preserving spirit of [hierarchical naming](https://en.wikipedia.org/wiki/Reverse_domain_name_notation).
-
-PNPM is used as the package manager.
+Note the package name change from `tweakpane-image-plugin` to `tweakpane-plugin-image` in the sanity-preserving spirit of [hierarchical naming](https://en.wikipedia.org/wiki/Reverse_domain_name_notation).

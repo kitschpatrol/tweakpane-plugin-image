@@ -3,11 +3,20 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title></title>
+		<script type="importmap">
+			{
+				"imports": {
+					"tweakpane": "../node_modules/tweakpane/dist/tweakpane.js",
+					"@tweakpane/core": "../node_modules/@tweakpane/core/dist/index.js",
+					"tweakpane-plugin-image": "../dist/tweakpane-plugin-image.js"
+				}
+			}
+		</script>
 	</head>
 	<body>
 		<script type="module">
-			import * as Tweakpane from '../node_modules/tweakpane/dist/tweakpane.js';
-			import * as TweakpaneImagePlugin from '../dist/tweakpane-image-plugin.js';
+			import * as Tweakpane from 'tweakpane';
+			import * as TweakpanePluginImage from 'tweakpane-plugin-image';
 
 			// Blue pixel for testing
 			const img = new Image();
@@ -25,7 +34,7 @@
 
 			const pane = new Tweakpane.Pane();
 
-			pane.registerPlugin(TweakpaneImagePlugin);
+			pane.registerPlugin(TweakpanePluginImage);
 
 			pane
 				.addBinding(params, 'base64', {
@@ -81,8 +90,8 @@
 		</style>
 
 		<h1>
-			<a href="https://github.com/metehus/tweakpane-image-plugin">
-				tweakpane-image-plugin
+			<a href="https://github.com/kitschpatrol/tweakpane-plugin-image">
+				tweakpane-plugin-image
 			</a>
 		</h1>
 		Image input plugin for
