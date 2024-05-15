@@ -1,17 +1,16 @@
 {
 	"name": "@kitschpatrol/tweakpane-plugin-image",
 	"version": "2.0.0",
-	"description": "Image input plugin for Tweakpane 4 with externalized dependencies",
+	"description": "A fork of tweakpane-image-plugin with build optimizations.",
 	"main": "dist/tweakpane-plugin-image.js",
 	"type": "module",
 	"types": "dist/types/index.d.ts",
 	"author": "Florian Morel, Matheus Dias <methidezeeni@gmail.com>",
 	"license": "MIT",
 	"keywords": [
+		"npm-package",
 		"tweakpane",
-		"tweakpane-plugin",
-		"plugin",
-		"image-input"
+		"tweakpane-plugin"
 	],
 	"files": [
 		"dist"
