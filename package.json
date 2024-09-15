@@ -45,7 +45,7 @@
 		"watch:ts": "onchange --initial --kill \"src/**/*.ts\" -- rollup --config rollup.config.js"
 	},
 	"peerDependencies": {
-		"tweakpane": "^4.0.4"
+		"tweakpane": "^4.0.0"
 	},
 	"dependencies": {
 		"@tweakpane/core": "^2.0.4"
