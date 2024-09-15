@@ -1,7 +1,7 @@
 'use strict';
 
 import Fs from 'fs';
-import Glob from 'glob';
+import * as Glob from 'glob';
 import Path from 'path';
 import {URL} from 'url';
 
