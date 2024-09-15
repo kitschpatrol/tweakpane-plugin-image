@@ -3,6 +3,8 @@
 import Fs from 'fs';
 import Glob from 'glob';
 import Path from 'path';
+import {URL} from 'url';
+
 const Package = JSON.parse(
 	Fs.readFileSync(new URL('../package.json', import.meta.url)),
 );
