@@ -31,3 +31,7 @@ I believe Matheus's fork is what's currently published as `tweakpane-image-plugi
 Note the package name change from `tweakpane-image-plugin` to `@kitschpatrol/tweakpane-plugin-image` in the sanity-preserving spirit of [hierarchical naming](https://en.wikipedia.org/wiki/Reverse_domain_name_notation).
 
 PNPM is used as the package manager.
+
+## Versioning
+
+In addition to the dependency externalization change, this fork also includes assorted dependency updates. In an effort to stay in sync with future upstream versions, intra-minor-version releases of the fork are tagged as "betas" of what would / will be the next minor upstream release.

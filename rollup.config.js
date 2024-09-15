@@ -7,7 +7,7 @@ import Autoprefixer from 'autoprefixer';
 import Postcss from 'postcss';
 import Cleanup from 'rollup-plugin-cleanup';
 import {terser as Terser} from 'rollup-plugin-terser';
-import Sass from 'sass';
+import * as Sass from 'sass';
 
 async function compileCss() {
 	const css = Sass.renderSync({
