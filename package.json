@@ -38,7 +38,7 @@
 		"format:ts": "eslint --ext .ts --fix \"src/**/*.ts\"",
 		"prepare": "run-s clean build",
 		"prepublishOnly": "npm test",
-		"release": "bumpp --commit 'Release: %s' --tag '%s' && pnpm run build && pnpm publish --tag beta --otp $(op read 'op://Personal/Npmjs/one-time password?attribute=otp')",
+		"release": "bumpp --commit 'Release: %s' --tag '%s' && pnpm run build && pnpm publish --tag latest --otp $(op read 'op://Personal/Npmjs/one-time password?attribute=otp')",
 		"server": "http-server -c-1 -o /test/browser.html",
 		"start": "run-p watch server",
 		"test": "eslint --ext .ts \"src/**/*.ts\"",
