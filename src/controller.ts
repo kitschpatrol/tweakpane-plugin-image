@@ -1,7 +1,7 @@
 import {Controller, Value, ViewProps} from '@tweakpane/core';
 
 import {ImageResolvable} from './model.js';
-import {createPlaceholderImage, loadImage} from './utils.js';
+import {loadImage} from './utils.js';
 import {PluginView} from './view.js';
 
 interface Config {
@@ -11,8 +11,6 @@ interface Config {
 	viewProps: ViewProps;
 	clickCallback?: (event: MouseEvent, input: HTMLInputElement) => void;
 }
-
-let placeholderImage: HTMLImageElement | null = null;
 
 export class PluginController implements Controller<PluginView> {
 	public readonly value: Value<ImageResolvable>;
@@ -114,10 +112,7 @@ export class PluginController implements Controller<PluginView> {
 		if (image instanceof HTMLImageElement) {
 			this.updateImage(image.src);
 		} else if (typeof image === 'string' || !image) {
-			if (image === 'placeholder' || !image) {
-				image = this.handlePlaceholderImage().src;
-			}
-			this.updateImage(image);
+			this.updateImage(image || '');
 		} else {
 			this.setValue(image);
 		}
@@ -142,18 +137,11 @@ export class PluginController implements Controller<PluginView> {
 		} else if (src) {
 			this.value.setRawValue(loadImage(src));
 		} else {
-			this.value.setRawValue(this.handlePlaceholderImage());
+			this.value.setRawValue('placeholder');
 		}
 	}
 
 	private handleValueChange() {
 		this.handleImage(this.value.rawValue);
-	}
-
-	private handlePlaceholderImage(): HTMLImageElement {
-		if (!placeholderImage) {
-			placeholderImage = createPlaceholderImage();
-		}
-		return placeholderImage;
 	}
 }

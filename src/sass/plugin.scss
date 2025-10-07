@@ -43,6 +43,18 @@
 		object-fit: cover;
 	}
 
+	&_placeholder {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: calc(tp.cssVar('container-unit-size') * 3);
+		color: tp.cssVar('input-fg');
+		opacity: 0.5;
+		font-family: tp.cssVar('base-font');
+		font-size: inherit;
+	}
+
 	&_area_root {
 		transition: opacity 0.16s ease-in-out;
 	}
