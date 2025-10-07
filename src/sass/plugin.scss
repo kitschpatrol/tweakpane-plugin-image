@@ -9,10 +9,11 @@
 	@extend %tp-input;
 
 	cursor: pointer;
-	display: inline-flex;
-	height: auto !important;
-	max-height: calc(tp.cssVar('container-unit-size') * 3);
-	//overflow: hidden;
+	display: flex;
+	align-items: flex-start;
+	height: calc(tp.cssVar('container-unit-size') * 3) !important;
+	line-height: 1;
+	overflow: hidden;
 	border-radius: 4px;
 	position: relative;
 
@@ -28,11 +29,14 @@
 	}
 
 	&_image {
+		display: block;
 		width: 100%;
-		height: max-content;
-		max-height: calc(tp.cssVar('container-unit-size') * 3);
-		//max-height: 100%;
+		height: calc(tp.cssVar('container-unit-size') * 3);
 		border: 0;
+		margin: 0;
+		padding: 0;
+		vertical-align: top;
+		flex-shrink: 0;
 	}
 
 	&_image_contain {
@@ -53,6 +57,11 @@
 		opacity: 0.5;
 		font-family: tp.cssVar('base-font');
 		font-size: inherit;
+		border: 0;
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+		flex-shrink: 0;
 	}
 
 	&_area_root {

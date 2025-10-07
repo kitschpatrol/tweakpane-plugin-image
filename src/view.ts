@@ -55,9 +55,12 @@ export class PluginView implements View {
 	changeImage(src: string) {
 		const hasImage = src && src !== '' && src !== 'placeholder';
 		if (hasImage) {
+			// Keep placeholder visible until image loads to prevent layout shift
+			this.image_.onload = () => {
+				this.image_.style.display = 'block';
+				this.placeholder_.style.display = 'none';
+			};
 			this.image_.src = src;
-			this.image_.style.display = 'block';
-			this.placeholder_.style.display = 'none';
 		} else {
 			this.image_.style.display = 'none';
 			this.placeholder_.style.display = 'flex';
