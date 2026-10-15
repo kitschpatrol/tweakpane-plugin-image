@@ -15,7 +15,6 @@ export function cloneImage(
 	canvas.width = source.width;
 	canvas.height = source.height;
 
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const ctx = canvas.getContext('2d')!;
 	ctx.drawImage(source, 0, 0);
 

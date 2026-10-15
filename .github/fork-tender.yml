@@ -1,0 +1,4 @@
+upstreams:
+  - repo: ayamflow/tweakpane-image-plugin
+    parent: true
+  - repo: metehus/tweakpane-image-plugin

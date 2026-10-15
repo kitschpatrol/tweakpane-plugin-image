@@ -2,17 +2,30 @@
 	"name": "@kitschpatrol/tweakpane-plugin-image",
 	"version": "2.0.1-beta.8",
 	"type": "module",
-	"description": "A fork of tweakpane-image-plugin with build optimizations.",
+	"description": "Fork of tweakpane-image-plugin with build optimizations.",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/kitschpatrol/tweakpane-plugin-image.git"
 	},
 	"homepage": "https://github.com/kitschpatrol/tweakpane-plugin-image",
 	"author": "Florian Morel, Matheus Dias <methidezeeni@gmail.com>",
+	"maintainers": [
+		{
+			"name": "Eric Mika",
+			"email": "eric@ericmika.com",
+			"url": "https://ericmika.com"
+		}
+	],
 	"license": "MIT",
-	"packageManager": "pnpm@10.18.1",
+	"packageManager": "pnpm@12.11.2",
 	"engines": {
 		"node": ">=18.0.0"
+	},
+	"devEngines": {
+		"runtime": {
+			"name": "node",
+			"version": "^24.16.0 || >=26.3.0"
+		}
 	},
 	"main": "dist/tweakpane-plugin-image.js",
 	"types": "dist/types/index.d.ts",
@@ -25,26 +38,25 @@
 		"tweakpane-plugin"
 	],
 	"scripts": {
-		"assets": "run-s clean build assets:version assets:zip",
+		"assets": "pnpm run clean && pnpm run build && pnpm run assets:version && pnpm run assets:zip",
 		"assets:version": "node scripts/assets-append-version.js",
-		"assets:zip": "zip -x '*types*' -j -r $(node scripts/dist-name.js)-$(cat package.json | npx json version).zip dist",
-		"build": "run-p build:*",
+		"assets:zip": "zip -x '*types*' -j -r $(node scripts/dist-name.js)-$(node -p \"require('./package.json').version\").zip dist",
+		"build": "pnpm run '/^build:/'",
 		"build:dev": "rollup --config rollup.config.js",
 		"build:dts": "tsc --project src/tsconfig-dts.json",
 		"build:prod": "rollup --config rollup.config.js --environment BUILD:production",
-		"clean": "rimraf dist *.tgz *.zip",
-		"format": "run-p format:*",
+		"clean": "shx rm -rf dist *.tgz *.zip",
+		"clean-deep": "shx rm -f pnpm-lock.yaml && git clean -fdX",
+		"format": "pnpm run '/^format:/'",
+		"format:readme": "mdat expand",
 		"format:scss": "prettier --parser scss --write \"src/sass/**/*.scss\"",
 		"format:ts": "eslint --ext .ts --fix \"src/**/*.ts\"",
-		"prepare": "run-s clean build",
-		"prepublishOnly": "npm test",
-		"release": "bumpp --commit 'Release: %s' --tag '%s' && pnpm run build && pnpm publish --tag latest --otp $(op read 'op://Personal/Npmjs/one-time password?attribute=otp')",
+		"prepare": "pnpm run clean && pnpm run build",
+		"release": "pnpm test && pnpm build && bumpp --preid fork --commit 'Release: %s' --tag '%s' && NPM_TOKEN=$(op read 'op://Personal/npm/token') pnpm publish --tag latest",
 		"server": "http-server -c-1 -o /test/browser.html",
-		"start": "run-p watch server",
-		"test": "eslint --ext .ts \"src/**/*.ts\"",
-		"watch": "run-p watch:*",
-		"watch:sass": "onchange --initial --kill \"src/sass/**/*.scss\" -- npm run build:",
-		"watch:ts": "onchange --initial --kill \"src/**/*.ts\" -- rollup --config rollup.config.js"
+		"start": "pnpm run '/^(watch|server)$/'",
+		"test": "eslint --ext .ts \"src/**/*.ts\" && mdat check",
+		"watch": "rollup --config rollup.config.js --watch --no-watch.clearScreen"
 	},
 	"peerDependencies": {
 		"tweakpane": "^4.0.0"
@@ -53,39 +65,35 @@
 		"@tweakpane/core": "^2.0.5"
 	},
 	"devDependencies": {
-		"@rollup/plugin-node-resolve": "^15.3.1",
-		"@rollup/plugin-replace": "^5.0.7",
-		"@rollup/plugin-terser": "^0.4.4",
-		"@rollup/plugin-typescript": "^11.1.6",
-		"@typescript-eslint/eslint-plugin": "^8.46.0",
-		"@typescript-eslint/parser": "^8.46.0",
-		"autoprefixer": "^10.4.21",
-		"bumpp": "^10.3.1",
-		"eslint": "^8.57.1",
-		"eslint-config-prettier": "^9.1.2",
-		"eslint-plugin-prettier": "^5.5.4",
-		"eslint-plugin-simple-import-sort": "^12.1.1",
-		"glob": "^11.0.3",
+		"@eslint/eslintrc": "^3.3.7",
+		"@eslint/js": "^10.0.1",
+		"@rollup/plugin-node-resolve": "^16.0.3",
+		"@rollup/plugin-replace": "^6.0.3",
+		"@rollup/plugin-terser": "^1.0.0",
+		"@rollup/plugin-typescript": "^12.3.0",
+		"@typescript-eslint/eslint-plugin": "^8.71.2",
+		"@typescript-eslint/parser": "^8.71.2",
+		"autoprefixer": "^10.6.1",
+		"bumpp": "^12.3.0",
+		"eslint": "^10.12.0",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-plugin-prettier": "^5.5.7",
+		"eslint-plugin-simple-import-sort": "^14.0.0",
+		"glob": "^13.0.6",
 		"http-server": "^14.1.1",
-		"npm-run-all": "^4.1.5",
-		"onchange": "^7.1.0",
-		"postcss": "^8.5.6",
-		"prettier": "^3.6.2",
-		"prettier-plugin-pkg": "^0.21.2",
-		"rimraf": "^6.0.1",
-		"rollup": "^4.52.4",
+		"mdat": "^3.6.2",
+		"postcss": "^8.5.30",
+		"prettier": "^3.9.10",
+		"prettier-plugin-pkg": "^0.22.1",
+		"rollup": "^4.64.6",
 		"rollup-plugin-cleanup": "^3.2.1",
-		"sass": "^1.93.2",
+		"sass": "^1.105.1",
+		"shx": "^0.4.0",
 		"tslib": "^2.8.1",
 		"tweakpane": "^4.0.5",
-		"typescript": "^5.9.3"
+		"typescript": "~6.0.3"
 	},
 	"publishConfig": {
 		"access": "public"
-	},
-	"pnpm": {
-		"onlyBuiltDependencies": [
-			"@parcel/watcher"
-		]
 	}
 }

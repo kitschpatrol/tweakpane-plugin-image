@@ -1,4 +1,10 @@
+MIT License
+
 Copyright (c) 2021 cocopon <cocopon@me.com>
+Copyright (c) 2021 Florian Morel
+Copyright (c) 2021-2023 Matheus Dias
+Copyright (c) 2021-2023 Palash Bansal
+Copyright (c) 2023-2026 Eric Mika (fork modifications)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

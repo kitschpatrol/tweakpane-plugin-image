@@ -1,7 +1,36 @@
+# Git Ignore
+# Also used by CSpell, Stylelint, and ESLint
+
+# @kitschpatrol/repo-config boilerplate
+!.env.example
+.agents/
+.astro/
+.claude/
+.DS_Store
+.env
+.env.*
+.eslint-config-inspector
+.netlify/
+.pnpm-store/
+.svelte-kit/
+.vitest/
+.worktrees/
+.wrangler/
+{tmp,temp}/
+**/*.min.js
+/scratch/
+bower_components/
+build/
+coverage/
+dist/
+node_modules/
+skills-lock.json
+vendor/
+
+# Customizations
 /.vscode/
 /dist/
 /*.zip
-.DS_Store
 
 ### https://raw.github.com/github/gitignore//Node.gitignore
 
@@ -45,7 +74,6 @@ bower_components
 build/Release
 
 # Dependency directories
-node_modules/
 jspm_packages/
 
 # Snowpack dependency directory (https://snowpack.dev/)
@@ -76,7 +104,6 @@ web_modules/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
 .env.test
 
 # parcel-bundler cache (https://parceljs.org/)

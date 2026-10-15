@@ -1,0 +1,9 @@
+allowBuilds:
+  '@parcel/watcher': true
+auditConfig:
+  ignoreGhsas:
+    # braces: stack-exhaustion DoS from deeply nested glob patterns, reached via
+    # fast-glob > micromatch from shx, globby, and find-workspaces. No patched
+    # release exists, and these only expand glob patterns from repo config and
+    # package.json scripts, never untrusted input.
+    - GHSA-vfj7-8cjw-p6xm
