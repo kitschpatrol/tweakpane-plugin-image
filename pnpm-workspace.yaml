@@ -7,3 +7,12 @@ auditConfig:
     # release exists, and these only expand glob patterns from repo config and
     # package.json scripts, never untrusted input.
     - GHSA-vfj7-8cjw-p6xm
+minimumReleaseAgeExclude:
+  - '@kitschpatrol/chagent@0.4.0'
+permissions:
+  mdat:
+    skills: true
+skills:
+  dirs:
+    - .agents/skills
+    - .claude/skills

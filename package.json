@@ -52,7 +52,7 @@
 		"format:scss": "prettier --parser scss --write \"src/sass/**/*.scss\"",
 		"format:ts": "eslint --ext .ts --fix \"src/**/*.ts\"",
 		"prepare": "pnpm run clean && pnpm run build",
-		"release": "pnpm test && pnpm build && bumpp --preid fork --commit 'Release: %s' --tag '%s' && pnpm publish --otp $(op item get npm --otp) --tag latest",
+		"release": "pnpm test && pnpm build && bumpp --preid fork --commit 'Release: %s' --tag '%s' --all --execute 'chagent' && pnpm publish --otp $(op item get npm --otp) --tag latest",
 		"server": "http-server -c-1 -o /test/browser.html",
 		"start": "pnpm run '/^(watch|server)$/'",
 		"test": "eslint --ext .ts \"src/**/*.ts\" && mdat check",
@@ -67,6 +67,7 @@
 	"devDependencies": {
 		"@eslint/eslintrc": "^3.3.7",
 		"@eslint/js": "^10.0.1",
+		"@kitschpatrol/chagent": "0.4.0",
 		"@rollup/plugin-node-resolve": "^16.0.3",
 		"@rollup/plugin-replace": "^6.0.3",
 		"@rollup/plugin-terser": "^1.0.0",
