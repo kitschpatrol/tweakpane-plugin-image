@@ -1,8 +1,10 @@
 {
 	"extends": "@kitschpatrol/typescript-config",
 	"compilerOptions": {
+		// Shipped JavaScript stays within ES2022 for browsers, so the ES2022 lib flags newer APIs in source.
 		"target": "ES2022",
 		"lib": ["ES2022", "DOM"],
+		// Vite's client types cover the `?inline` stylesheet import.
 		"types": ["node", "vite/client"]
 	}
 }
