@@ -1,42 +1,43 @@
 // Import core styles
-@use '../../node_modules/@tweakpane/core/lib/sass/tp';
+@use '@tweakpane/core/lib/sass/tp';
 
 :root {
-	--tp-plugin-image-dragging-color: hsla(230, 100%, 66%, 1);
+	--tp-plugin-image-dragging-color: hsl(230deg 100% 66% / 100%);
 }
 
 .#{tp.$prefix}-imgv {
 	@extend %tp-input;
 
 	cursor: pointer;
+	position: relative;
+	overflow: hidden;
 	display: flex;
+	flex-wrap: nowrap;
 	align-items: flex-start;
 	height: calc(tp.cssVar('container-unit-size') * 3) !important;
-	line-height: 1;
-	overflow: hidden;
 	border-radius: 4px;
-	position: relative;
+	line-height: 1;
 
 	&.#{tp.$disabled} {
 		opacity: 0.5;
 	}
 
 	&_input {
+		pointer-events: none;
 		width: 0;
 		height: 0;
-		pointer-events: none;
 		visibility: hidden;
 	}
 
 	&_image {
 		display: block;
+		flex-shrink: 0;
 		width: 100%;
 		height: calc(tp.cssVar('container-unit-size') * 3);
-		border: 0;
 		margin: 0;
 		padding: 0;
+		border: 0;
 		vertical-align: top;
-		flex-shrink: 0;
 	}
 
 	&_image_contain {
@@ -49,19 +50,20 @@
 
 	&_placeholder {
 		display: flex;
+		flex-shrink: 0;
+		flex-wrap: nowrap;
 		align-items: center;
 		justify-content: center;
+		box-sizing: border-box;
 		width: 100%;
 		height: calc(tp.cssVar('container-unit-size') * 3);
-		color: tp.cssVar('input-fg');
-		opacity: 0.5;
-		font-family: tp.cssVar('base-font');
-		font-size: inherit;
-		border: 0;
 		margin: 0;
 		padding: 0;
-		box-sizing: border-box;
-		flex-shrink: 0;
+		border: 0;
+		font-family: tp.cssVar('base-font');
+		font-size: inherit;
+		color: tp.cssVar('input-fg');
+		opacity: 0.5;
 	}
 
 	&_area_root {

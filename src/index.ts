@@ -1,9 +1,9 @@
-import type {TpPlugin} from 'tweakpane';
+import type { TpPlugin } from 'tweakpane'
+import { TweakpaneImagePlugin } from './plugin'
+import pluginCss from './styles/plugin.scss?inline'
 
-import {TweakpaneImagePlugin} from './plugin.js';
+export const id = 'input-image'
 
-export const id = 'input-image';
+export const css: string = pluginCss
 
-export const css = '__css__';
-
-export const plugins: TpPlugin[] = [TweakpaneImagePlugin];
+export const plugins: TpPlugin[] = [TweakpaneImagePlugin]

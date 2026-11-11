@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta charset="UTF-8" />
+		<title>Tweakpane image demo</title>
+	</head>
+	<body>
+		<script type="module">
+			import * as Tweakpane from 'tweakpane'
+			import * as TweakpanePluginImage from '../src/index.ts'
+
+			// Blue pixel for testing
+			const img = new Image()
+			img.src =
+				'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
+			const params = {
+				base64: img,
+				placeholder: 'placeholder',
+				url: 'https://images.unsplash.com/photo-1631875182291-17e8310183ed?q=80&w=500',
+			}
+
+			document.addEventListener('load', () => {
+				changeAllImages()
+			})
+
+			const pane = new Tweakpane.Pane()
+
+			pane.registerPlugin(TweakpanePluginImage)
+
+			pane
+				.addBinding(params, 'base64', {
+					view: 'input-image',
+				})
+				.on('change', (ev) => {
+					console.log('base64 image value changed to ', ev.value)
+					changeAllImages()
+				})
+
+			pane
+				.addBinding(params, 'placeholder', {
+					view: 'input-image',
+				})
+				.on('change', (ev) => {
+					console.log('Placeholder image value changed to ', ev.value)
+					changeAllImages()
+				})
+
+			pane
+				.addBinding(params, 'url', {
+					view: 'input-image',
+					imageFit: 'contain',
+					label: 'URL (with contain fit)',
+				})
+				.on('change', (ev) => {
+					console.log('URL image value changed to ', ev.value)
+					changeAllImages()
+				})
+
+			pane
+				.addButton({
+					title: 'Load Random Image',
+				})
+				.on('click', () => {
+					const randomIndex = Math.floor(Math.random() * 1000)
+					params.placeholder = `https://static.photos/textures/640x360/${randomIndex}`
+					pane.refresh()
+				})
+
+			function changeImage(id, img) {
+				if (img && img.src) {
+					document.getElementById(id).src = img.src
+				}
+			}
+
+			function changeAllImages() {
+				changeImage('base64', params.base64)
+				changeImage('placeholder', params.placeholder)
+				changeImage('url', params.url)
+			}
+
+			window.pane = pane
+		</script>
+
+		<style>
+			img {
+				max-width: 100%;
+			}
+
+			* {
+				font-family: monospace;
+			}
+		</style>
+
+		<h1>
+			<a href="https://github.com/kitschpatrol/tweakpane-plugin-image"> tweakpane-plugin-image </a>
+		</h1>
+		Image input plugin for
+		<a href="https://cocopon.github.io/tweakpane/">TweakPane</a>. Created by
+		<a href="https://github.com/metehus">@metehus</a> based on
+		<a href="https://github.com/ayamflow/tweakpane-image-plugin">a fork</a>.
+
+		<h2>Try to click on a image to change it or drag and drop from a file or a URL.</h2>
+
+		<h2>Images:</h2>
+
+		<h3><b>base64</b></h3>
+		<img alt="Image preview" id="base64" />
+
+		<h3><b>placeholder</b></h3>
+		<img alt="Image preview" id="placeholder" />
+
+		<h3><b>url</b></h3>
+		<img alt="Image preview" id="url" />
+	</body>
+</html>

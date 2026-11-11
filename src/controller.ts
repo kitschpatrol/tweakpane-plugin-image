@@ -1,147 +1,140 @@
-import {Controller, Value, ViewProps} from '@tweakpane/core';
+import type { Controller, Value, ViewProps } from '@tweakpane/core'
+import type { ImageResolvable } from './model'
+import { loadImage } from './utils'
+import { PluginView } from './view'
 
-import {ImageResolvable} from './model.js';
-import {loadImage} from './utils.js';
-import {PluginView} from './view.js';
-
-interface Config {
-	value: Value<ImageResolvable>;
-	imageFit: 'contain' | 'cover';
-	extensions: string[];
-	viewProps: ViewProps;
-	clickCallback?: (event: MouseEvent, input: HTMLInputElement) => void;
+type Config = {
+	clickCallback?: (event: MouseEvent, input: HTMLInputElement) => void
+	extensions: string[]
+	imageFit: 'contain' | 'cover'
+	value: Value<unknown>
+	viewProps: ViewProps
 }
 
 export class PluginController implements Controller<PluginView> {
-	public readonly value: Value<ImageResolvable>;
-	public readonly view: PluginView;
-	public readonly viewProps: ViewProps;
+	public readonly value: Value<unknown>
+	public readonly view: PluginView
+	public readonly viewProps: ViewProps
 
 	constructor(doc: Document, config: Config) {
-		this.value = config.value;
-		this.viewProps = config.viewProps;
+		this.value = config.value
+		this.viewProps = config.viewProps
 		this.view = new PluginView(doc, {
-			viewProps: this.viewProps,
+			clickCallback: config.clickCallback,
 			extensions: config.extensions,
 			imageFit: config.imageFit,
-			clickCallback: config.clickCallback,
-		});
+			viewProps: this.viewProps,
+		})
 
-		this.onFile = this.onFile.bind(this);
-		this.onDrop = this.onDrop.bind(this);
-		this.onDragStart = this.onDragStart.bind(this);
-		this.onDragOver = this.onDragOver.bind(this);
-		this.onDragLeave = this.onDragLeave.bind(this);
+		this.onFile = this.onFile.bind(this)
+		this.onDrop = this.onDrop.bind(this)
+		this.onDragStart = this.onDragStart.bind(this)
+		this.onDragOver = this.onDragOver.bind(this)
+		this.onDragLeave = this.onDragLeave.bind(this)
 
-		this.view.input.addEventListener('change', this.onFile);
-		this.view.element.addEventListener('drop', this.onDrop);
-		this.view.element.addEventListener('dragstart', this.onDragStart);
-		this.view.element.addEventListener('dragover', this.onDragOver);
-		this.view.element.addEventListener('dragleave', this.onDragLeave);
+		this.view.input.addEventListener('change', this.onFile)
+		this.view.element.addEventListener('drop', this.onDrop)
+		this.view.element.addEventListener('dragstart', this.onDragStart)
+		this.view.element.addEventListener('dragover', this.onDragOver)
+		this.view.element.addEventListener('dragleave', this.onDragLeave)
 
 		this.viewProps.handleDispose(() => {
-			this.view.input.removeEventListener('change', this.onFile);
-			this.view.element.removeEventListener('drop', this.onDrop);
-			this.view.element.removeEventListener('dragstart', this.onDragStart);
-			this.view.element.removeEventListener('dragover', this.onDragOver);
-			this.view.element.removeEventListener('dragleave', this.onDragLeave);
-		});
+			this.view.input.removeEventListener('change', this.onFile)
+			this.view.element.removeEventListener('drop', this.onDrop)
+			this.view.element.removeEventListener('dragstart', this.onDragStart)
+			this.view.element.removeEventListener('dragover', this.onDragOver)
+			this.view.element.removeEventListener('dragleave', this.onDragLeave)
+		})
 
-		this.value.emitter.on('change', () => this.handleValueChange());
+		this.value.emitter.on('change', () => {
+			this.handleValueChange()
+		})
 
-		this.handleValueChange();
+		this.handleValueChange()
 	}
 
-	private onFile(event: Event): void {
-		const files = (event?.target as HTMLInputElement).files;
-		if (!files || !files.length) return;
-
-		const file = files[0];
-		this.setValue(file);
-		// this.updateImage(url);
-	}
-
-	private onDrop(event: DragEvent) {
-		event.preventDefault();
-		try {
-			const {dataTransfer} = event;
-			const file = dataTransfer?.files[0];
-			if (file) {
-				// const url = URL.createObjectURL(file);
-				// this.updateImage(url);
-				this.setValue(file);
-			} else {
-				const imgId = dataTransfer?.getData('img-id');
-				if (imgId) {
-					const img = document.getElementById(imgId) as HTMLImageElement;
-					this.setValue(img);
-				} else {
-					const url = dataTransfer?.getData('url');
-					if (!url) throw new Error('No url');
-					this.setValue(url);
-				}
-				// loadImage(url).then(async (image) => {
-				// 	console.log('drop', image);
-				// 	const clone = await cloneImage(image);
-				// 	// this.updateImage(clone.src);
-				// 	this.setValue(clone);
-				// });
-			}
-		} catch (e) {
-			console.error('Could not parse the dropped image', e);
-		} finally {
-			this.view.changeDraggingState(false);
-		}
-	}
-
-	private onDragStart(event: DragEvent) {
-		event.dataTransfer?.setData('img-id', this.view.image_.id);
-		event.dataTransfer?.setDragImage(this.view.image_, 0, 0);
-	}
-
-	private onDragOver(event: Event) {
-		event.preventDefault();
-		this.view.changeDraggingState(true);
-	}
-
-	private onDragLeave() {
-		this.view.changeDraggingState(false);
-	}
-
-	private handleImage(image: ImageResolvable) {
+	private handleImage(image: unknown) {
 		if (image instanceof HTMLImageElement) {
-			this.updateImage(image.src);
+			this.updateImage(image.src)
 		} else if (typeof image === 'string' || !image) {
-			this.updateImage(image || '');
+			this.updateImage(typeof image === 'string' ? image : '')
 		} else {
-			this.setValue(image);
-		}
-	}
-
-	private updateImage(src: string) {
-		this.view.changeImage(src);
-	}
-
-	private setValue(src: ImageResolvable) {
-		if (src instanceof HTMLImageElement) {
-			this.value.setRawValue(src);
-		} else if (src instanceof File) {
-			const url = URL.createObjectURL(src) + '#' + src.name;
-			(src as any).src = url;
-			const img = loadImage(url);
-			// 	.catch(() => {
-			// 	// URL.revokeObjectURL(url);
-			// });
-			// URL.revokeObjectURL(url); //todo: revoke sometime.
-			this.value.setRawValue(img || src);
-		} else if (src) {
-			this.value.setRawValue(loadImage(src));
-		} else {
-			this.value.setRawValue('placeholder');
+			this.setValue(image as ImageResolvable)
 		}
 	}
 
 	private handleValueChange() {
-		this.handleImage(this.value.rawValue);
+		this.handleImage(this.value.rawValue)
+	}
+
+	private onDragLeave() {
+		this.view.changeDraggingState(false)
+	}
+
+	private onDragOver(event: Event) {
+		event.preventDefault()
+		this.view.changeDraggingState(true)
+	}
+
+	private onDragStart(event: DragEvent) {
+		event.dataTransfer?.setData('img-id', this.view.image_.id)
+		event.dataTransfer?.setDragImage(this.view.image_, 0, 0)
+	}
+
+	private onDrop(event: DragEvent) {
+		event.preventDefault()
+		try {
+			const { dataTransfer } = event
+			const file = dataTransfer?.files[0]
+			if (file) {
+				this.setValue(file)
+				return
+			}
+
+			const imageId = dataTransfer?.getData('img-id') ?? ''
+			if (imageId !== '') {
+				const image = document.querySelector<HTMLImageElement>(`#${CSS.escape(imageId)}`)!
+				this.setValue(image)
+				return
+			}
+
+			const url = dataTransfer?.getData('url') ?? ''
+			if (url === '') {
+				throw new Error('No url')
+			}
+
+			this.setValue(url)
+		} catch (error) {
+			console.error('Could not parse the dropped image', error)
+		} finally {
+			this.view.changeDraggingState(false)
+		}
+	}
+
+	private onFile(): void {
+		const file = this.view.input.files?.item(0)
+		if (!file) {
+			return
+		}
+
+		this.setValue(file)
+	}
+
+	private setValue(src: ImageResolvable) {
+		if (src instanceof HTMLImageElement) {
+			this.value.setRawValue(src)
+		} else if (src instanceof File) {
+			const url = URL.createObjectURL(src) + '#' + src.name
+			Object.assign(src, { src: url })
+			this.value.setRawValue(loadImage(url))
+		} else if (src === '') {
+			this.value.setRawValue('placeholder')
+		} else {
+			this.value.setRawValue(loadImage(src))
+		}
+	}
+
+	private updateImage(src: string) {
+		this.view.changeImage(src)
 	}
 }
