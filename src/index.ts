@@ -7,3 +7,7 @@ export const id = 'input-image'
 export const css: string = pluginCss
 
 export const plugins: TpPlugin[] = [TweakpaneImagePlugin]
+
+export type { ImageResolvable } from './model'
+export type { PluginInputParams } from './plugin'
+export { cloneImage, loadImage } from './utils'
