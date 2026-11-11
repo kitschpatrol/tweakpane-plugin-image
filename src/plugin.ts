@@ -12,10 +12,20 @@ export type PluginInputParams = {
 
 const DEFAULT_EXTENSIONS = ['.jpg', '.png', '.gif']
 
+/**
+ * Objects with a string `src`, such as images from another window or files with
+ * an attached URL, resolve to that source, or to `'placeholder'` when it is
+ * empty. Any other value passes through unchanged, so a refresh never rewrites
+ * a value the plugin cannot display.
+ */
 function readImage(exValue: unknown): unknown {
-	const { src } = exValue as { src?: unknown }
-	if (src !== undefined) {
-		return src === '' ? 'placeholder' : src
+	if (
+		typeof exValue === 'object' &&
+		exValue !== null &&
+		'src' in exValue &&
+		typeof exValue.src === 'string'
+	) {
+		return exValue.src === '' ? 'placeholder' : exValue.src
 	}
 
 	return exValue

@@ -56,10 +56,12 @@ export class PluginController implements Controller<PluginView> {
 	private handleImage(image: unknown) {
 		if (image instanceof HTMLImageElement) {
 			this.updateImage(image.src)
-		} else if (typeof image === 'string' || !image) {
-			this.updateImage(typeof image === 'string' ? image : '')
+		} else if (image instanceof File) {
+			this.setValue(image)
+		} else if (typeof image === 'string') {
+			this.updateImage(image)
 		} else {
-			this.setValue(image as ImageResolvable)
+			this.updateImage('')
 		}
 	}
 
