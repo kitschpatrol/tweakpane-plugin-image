@@ -17,6 +17,7 @@ export class PluginView implements View {
 	private readonly placeholder_: HTMLElement
 
 	constructor(doc: Document, config: Config) {
+		this.onImageLoad_ = this.onImageLoad_.bind(this)
 
 		this.element = doc.createElement('div')
 		this.element.classList.add(className())
@@ -66,15 +67,18 @@ export class PluginView implements View {
 
 	changeImage(src: string) {
 		if (src === '' || src === 'placeholder') {
+			this.image_.removeEventListener('load', this.onImageLoad_)
 			this.image_.style.display = 'none'
 			this.placeholder_.style.display = 'flex'
 		} else {
 			// Keep placeholder visible until image loads to prevent layout shift
-			this.image_.onload = () => {
-				this.image_.style.display = 'block'
-				this.placeholder_.style.display = 'none'
-			}
+			this.image_.addEventListener('load', this.onImageLoad_)
 			this.image_.src = src
 		}
+	}
+
+	private onImageLoad_() {
+		this.image_.style.display = 'block'
+		this.placeholder_.style.display = 'none'
 	}
 }
