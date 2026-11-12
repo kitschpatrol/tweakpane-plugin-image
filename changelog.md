@@ -5,13 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.0.1-fork.2] - 2026-11-11
+
+### Added
+
+- Export `ImageResolvable`, `PluginInputParams` with typed click callbacks, and the `loadImage` and `cloneImage` helpers from the package entry.
+- Add a `/lite` entry and minified lite build that keep `@tweakpane/core` external for sharing across plugins.
+
+### Changed
+
+- Bundle `@tweakpane/core` in the default builds and mark the package as side-effect-free for tree shaking.
+- **Breaking:** Restrict package imports to the root, `/lite`, and `/package.json`, blocking other deep imports and replacing `dist/types` with one bundled declaration file.
+- **Breaking:** Raise the browser JavaScript target from ES6 to ES2022.
+- **Breaking:** Drop declared support for Node.js 19, 21, 23, and 25.
+
+### Fixed
+
+- Preserve `null`, `undefined`, and unsupported values on binding refresh, showing the placeholder instead of throwing or rewriting the value.
+- Keep the placeholder visible when a stale image load event fires after the binding is cleared.
+- Fall back to the dropped URL when a dragged image cannot be found in the current document, logging an error and preserving the value when no URL is available.
+
+### Documentation
+
+- Expand the README with installation and usage examples, `/lite` dependency guidance, public exports, contribution instructions, and clarified upstream and template attribution.
 
 ### Maintenance
 
 - Update the project's pnpm version to 12.16.1.
 - Update the GitHub release-note and release actions.
 - Switch scripted npm publishing to a one-time password retrieved through the 1Password CLI.
+- Replace Rollup and separate Sass and declaration scripts with tsdown, add publint and Are the Types Wrong package checks, and remove automatic installation builds and versioned ZIP packaging scripts.
+- Adopt `@kitschpatrol/shared-config` and `ksc` for shared linting and formatting, with editor integration.
+- Move the interactive demo to Vite with live reloading.
+- Add Vitest and happy-dom tests for plugin registration, styles, binding refreshes, file selection, drag and drop, callbacks, and disposal.
+- Add CI builds, linting, and tests on Linux, macOS, and Windows.
+- Automate monthly and manually triggered dependency-update pull requests with `ksc-update`.
+- Generate changelogs with `chagent` during versioning and build the versioned package before publishing.
+- Refresh development dependencies, upgrade pnpm to 12.18.0, and update CI, repository metadata, and Fork Tender actions.
 
 ## [2.0.1-fork.1] - 2026-10-15
 
@@ -194,7 +224,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Set up TypeScript/Rollup builds, linting and formatting, browser testing, watch commands, and versioned release archives.
 
-[Unreleased]: https://github.com/kitschpatrol/tweakpane-plugin-image/compare/2.0.1-fork.1...HEAD
 [1.0.1]: https://github.com/kitschpatrol/tweakpane-plugin-image/releases/tag/v1.0.1
 [1.1.401]: https://github.com/kitschpatrol/tweakpane-plugin-image/compare/v1.0.1...v1.1.401
 [1.1.402]: https://github.com/kitschpatrol/tweakpane-plugin-image/compare/v1.1.401...v1.1.402
@@ -209,3 +238,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.0.1-beta.7]: https://github.com/kitschpatrol/tweakpane-plugin-image/compare/2.0.1-beta.6...2.0.1-beta.7
 [2.0.1-beta.8]: https://github.com/kitschpatrol/tweakpane-plugin-image/compare/2.0.1-beta.7...2.0.1-beta.8
 [2.0.1-fork.1]: https://github.com/kitschpatrol/tweakpane-plugin-image/compare/2.0.1-beta.8...2.0.1-fork.1
+[2.0.1-fork.2]: https://github.com/kitschpatrol/tweakpane-plugin-image/compare/2.0.1-fork.1...2.0.1-fork.2
