@@ -269,6 +269,26 @@ describe('image plugin', () => {
 		expect(second.image.getAttribute('src')).toBe(source)
 	})
 
+	it('falls back to the dropped URL when the dragged image is not in this document', () => {
+		const { params, root } = setup()
+		const dataTransfer = createDataTransfer([], { 'img-id': 'missing-image', url: source })
+		root.dispatchEvent(createDragEvent('drop', dataTransfer))
+		expect(params.value).toBeInstanceOf(HTMLImageElement)
+		expect((params.value as HTMLImageElement).src).toBe(source)
+	})
+
+	it('logs drops of an unreachable dragged image without a URL and keeps the value', () => {
+		const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {
+			// Keep the expected error out of the test output
+		})
+		const { changes, params, root } = setup()
+		const dataTransfer = createDataTransfer([], { 'img-id': 'missing-image' })
+		root.dispatchEvent(createDragEvent('drop', dataTransfer))
+		expect(params.value).toBe('placeholder')
+		expect(changes).toEqual([])
+		expect(consoleError).toHaveBeenCalledTimes(1)
+	})
+
 	it('logs drops without an image and keeps the value', () => {
 		const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {
 			// Keep the expected errors out of the test output

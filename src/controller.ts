@@ -93,9 +93,12 @@ export class PluginController implements Controller<PluginView> {
 				return
 			}
 
+			// An image dragged from another document (iframe, popup window, or
+			// shadow root) can't be found by id, so fall through to its URL
 			const imageId = dataTransfer?.getData('img-id') ?? ''
-			if (imageId !== '') {
-				const image = document.querySelector<HTMLImageElement>(`#${CSS.escape(imageId)}`)!
+			const image =
+				imageId === '' ? null : document.querySelector<HTMLImageElement>(`#${CSS.escape(imageId)}`)
+			if (image) {
 				this.setValue(image)
 				return
 			}
